@@ -146,6 +146,13 @@ const CSS = `
 .cap-face-img{display:block;width:100%;height:100%;object-fit:cover}
 .cap-face-name{margin:14px 0 2px;font-family:'Cinzel',serif;font-size:15px;letter-spacing:.34em;color:var(--cap-gold)}
 .cap-face-role{margin:0;font-size:12.5px;letter-spacing:.08em;color:rgba(244,239,230,.62)}
+.cap-weather{margin:9px 0 0;font-family:'Cinzel',serif;font-size:10.5px;letter-spacing:.3em;color:rgba(201,162,39,.8)}
+.cap-face-canvas,.cap-face-img{transition:filter 1.1s ease}
+.cap-chamber.cap-guard .cap-weather{color:#ddd6c6}
+.cap-chamber.cap-guard .cap-face-name{color:#ece5d3}
+.cap-chamber.cap-guard .cap-face-canvas,.cap-chamber.cap-guard .cap-face-img{filter:saturate(.42) brightness(.74) contrast(1.14)}
+.cap-chamber.cap-guard .cap-face-frame{border-color:rgba(221,214,198,.6);
+ box-shadow:0 0 0 1px rgba(221,214,198,.28),0 18px 50px rgba(0,0,0,.7),inset 0 0 90px rgba(0,0,0,.8)}
 .cap-eyebrow{margin:6px 0 10px;font-size:12px;letter-spacing:.32em;color:var(--cap-gold)}
 .cap-title{margin:0 0 16px;font-family:'Cinzel',serif;font-weight:700;
  font-size:clamp(30px,4vw,44px);line-height:1.08;color:var(--cap-pale)}
@@ -510,6 +517,18 @@ function wireSeat(refs, apiBase) {
       const data = await res.json();
       if (!data || typeof data.reply !== 'string') throw new Error('chat shape');
       addMessage('cap', 'THE CAPTAIN', data.reply);
+      // The weather turns with his temper (George, 2026-11-20 12:59 CT):
+      // the host names the mode; the seat makes it FELT — face cools,
+      // frame hardens to iron, the weather line speaks. Host mode restores.
+      if (data.mode === 'guard' || data.mode === 'host') {
+        const chamber = thread.closest('.cap-chamber');
+        if (chamber) {
+          const guard = data.mode === 'guard';
+          chamber.classList.toggle('cap-guard', guard);
+          const w = chamber.querySelector('.cap-weather');
+          if (w) w.textContent = guard ? 'THE GUARD IS UP' : 'THE GATE IS WARM';
+        }
+      }
     } catch (err) {
       addMessage('note', null,
         'The Captain\u2019s voice faltered — the line to his seat is down. His tales above remain true, and told.');
@@ -564,6 +583,7 @@ export function mountCaptain(root, options = {}) {
   faceWrap.appendChild(frame);
   faceWrap.appendChild(el('p', 'cap-face-name', 'THE CAPTAIN'));
   faceWrap.appendChild(el('p', 'cap-face-role', 'Keeper of the Wall and of the Book'));
+  faceWrap.appendChild(el('p', 'cap-weather', 'THE GATE IS WARM'));
   top.appendChild(faceWrap);
 
   const intro = el('div', 'cap-intro');
