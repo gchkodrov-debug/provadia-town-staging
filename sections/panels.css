@@ -1,0 +1,358 @@
+/* ============================================================
+   PROVADIA — Town of Record · Station Panels
+   panels.css — lift with panels.html into the town shell.
+   Palette: field #141210 · golds #C9A227 / #FFEFC1 / #6B4A12 / #3D2A08
+            salt #F4EFE6
+   Type: Cinzel (display) · Inter (body) — loaded by host page.
+   Panels are translucent so the 3D scene breathes behind them.
+   ============================================================ */
+
+:root{
+  --field:#141210;
+  --gold:#C9A227;
+  --gold-pale:#FFEFC1;
+  --gold-deep:#6B4A12;
+  --gold-shadow:#3D2A08;
+  --salt:#F4EFE6;
+  --salt-dim:rgba(244,239,230,.72);
+  --salt-faint:rgba(244,239,230,.52);
+  --panel-bg:rgba(20,18,16,.82);
+  --hairline:rgba(201,162,39,.38);
+  --hairline-soft:rgba(201,162,39,.18);
+}
+
+/* ---------- Base panel ---------- */
+.town-panel{
+  position:relative;
+  max-width:680px;
+  margin:0 auto;
+  padding:2.75rem 2.5rem 2.5rem;
+  background:var(--panel-bg);
+  -webkit-backdrop-filter:blur(14px) saturate(1.08);
+  backdrop-filter:blur(14px) saturate(1.08);
+  border:1px solid var(--hairline);
+  color:var(--salt);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  font-size:1rem;
+  line-height:1.65;
+  box-sizing:border-box;
+}
+.town-panel *{box-sizing:border-box}
+.town-panel::before{
+  content:"";
+  position:absolute;inset:6px;
+  border:1px solid var(--hairline-soft);
+  pointer-events:none;
+}
+.panel-inner{position:relative}
+
+/* Eyebrow — small, tracked, gold */
+.panel-eyebrow{
+  margin:0 0 1rem;
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:.68rem;
+  font-weight:600;
+  letter-spacing:.32em;
+  text-transform:uppercase;
+  color:var(--gold);
+  line-height:1.5;
+}
+.panel-eyebrow::after{
+  content:"";
+  display:block;
+  width:44px;height:1px;
+  background:var(--gold);
+  margin-top:.85rem;
+  opacity:.75;
+}
+
+/* Display headings */
+.panel-title{
+  margin:0 0 1.1rem;
+  font-family:'Cinzel',serif;
+  font-weight:700;
+  font-size:2rem;
+  line-height:1.12;
+  letter-spacing:.06em;
+  color:var(--gold-pale);
+  text-transform:uppercase;
+}
+.panel-title--xl{
+  font-size:clamp(2.9rem,8vw,4.6rem);
+  letter-spacing:.14em;
+  margin-bottom:.9rem;
+}
+.panel-subtitle{
+  margin:0 0 1rem;
+  font-family:'Cinzel',serif;
+  font-size:1.15rem;
+  font-weight:600;
+  letter-spacing:.04em;
+  color:var(--salt);
+  line-height:1.45;
+}
+.panel-lead{
+  margin:0 0 1rem;
+  font-size:1.08rem;
+  line-height:1.65;
+  color:var(--salt);
+}
+.panel-body{margin:0 0 1rem;color:var(--salt-dim)}
+.panel-body:last-child{margin-bottom:0}
+.panel-small{
+  margin:1.4rem 0 0;
+  font-size:.86rem;
+  letter-spacing:.04em;
+  color:var(--salt-faint);
+  font-style:italic;
+}
+.panel-panel a{color:var(--gold-pale)}
+.town-panel a{
+  color:var(--gold-pale);
+  text-decoration:underline;
+  text-decoration-color:rgba(201,162,39,.55);
+  text-underline-offset:3px;
+}
+.town-panel a:hover,.town-panel a:focus{color:#fff;text-decoration-color:var(--gold)}
+
+/* ---------- 1 · Arrival ---------- */
+.town-panel[data-station="arrival"]{
+  text-align:center;
+  padding-top:3.4rem;padding-bottom:3.2rem;
+}
+.town-panel[data-station="arrival"] .panel-eyebrow::after{margin-left:auto;margin-right:auto}
+.town-panel[data-station="arrival"] .panel-lead{
+  font-family:'Cinzel',serif;
+  font-size:1.22rem;
+  line-height:1.5;
+  color:var(--salt);
+}
+.town-panel[data-station="arrival"] .panel-small{font-style:normal;letter-spacing:.06em}
+
+/* ---------- 3 · Square / Coin — contract block ---------- */
+.contract-block{
+  margin:1.6rem 0 .4rem;
+  padding:1.15rem 1.2rem 1.05rem;
+  border:1px solid var(--hairline);
+  background:rgba(61,42,8,.28);
+}
+.contract-label{
+  margin:0 0 .6rem;
+  font-size:.72rem;font-weight:600;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);
+}
+.contract-row{
+  display:flex;align-items:flex-start;gap:.7rem;flex-wrap:wrap;
+}
+.contract-address{
+  flex:1 1 260px;
+  font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+  font-size:.82rem;line-height:1.55;
+  color:var(--gold-pale);
+  word-break:break-all;
+  margin:0;
+}
+.copy-btn{
+  flex:0 0 auto;
+  appearance:none;
+  border:1px solid var(--hairline);
+  background:transparent;
+  color:var(--gold-pale);
+  font-family:'Inter',sans-serif;
+  font-size:.72rem;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;
+  padding:.55rem .9rem;
+  cursor:pointer;
+}
+.copy-btn:hover,.copy-btn:focus{background:rgba(201,162,39,.14);color:#fff}
+.contract-links{
+  margin:1rem 0 0;padding:0;list-style:none;
+  display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;
+  font-size:.9rem;
+}
+
+/* ---------- 4 · Wall ---------- */
+.wall-counter{
+  margin:.4rem 0 .15rem;
+  font-family:'Cinzel',serif;
+  font-size:clamp(3.4rem,10vw,5.2rem);
+  font-weight:700;line-height:1;
+  letter-spacing:.08em;
+  color:var(--gold-pale);
+}
+.wall-counter-sub{
+  margin:0 0 1.4rem;
+  font-size:.82rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);
+}
+.wall-slot{
+  margin:1.4rem 0;
+  padding:1.1rem 1.2rem;
+  border:1px dashed rgba(201,162,39,.5);
+  color:var(--salt-dim);
+}
+.wall-slot p{margin:0}
+.sub-block{margin-top:1.6rem;padding-top:1.4rem;border-top:1px solid var(--hairline-soft)}
+.sub-block-title{
+  margin:0 0 .7rem;
+  font-family:'Cinzel',serif;
+  font-size:.95rem;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold-pale);
+}
+.night-brick-countdown{
+  margin:.8rem 0 0;
+  font-size:.9rem;color:var(--salt-dim);
+}
+.night-brick-countdown #nightBrickCountdown{
+  font-family:ui-monospace,Menlo,Consolas,monospace;
+  color:var(--gold-pale);
+}
+.bell-line{
+  margin-top:1.4rem;
+  padding-left:1rem;
+  border-left:2px solid var(--gold-deep);
+  color:var(--salt-dim);
+  font-style:italic;
+}
+.bell-line p{margin:0}
+
+/* ---------- 5 · Registry ---------- */
+.registry-empty{
+  margin:0 0 1rem;
+  font-family:'Cinzel',serif;
+  font-size:1.35rem;font-weight:600;
+  letter-spacing:.03em;color:var(--gold-pale);
+}
+.registry-treasure{
+  margin:1.4rem 0 0;
+  padding:1.1rem 1.2rem;
+  border:1px solid var(--hairline-soft);
+  background:rgba(201,162,39,.06);
+  font-family:'Cinzel',serif;
+  font-size:1.02rem;line-height:1.55;
+  color:var(--salt);
+}
+.registry-treasure p{margin:0}
+
+/* ---------- 6 · Road ---------- */
+.road-list{margin:1.6rem 0 0;padding:0;list-style:none;counter-reset:road}
+.road-step{
+  position:relative;
+  padding:1rem 1.1rem 1rem 3.4rem;
+  margin-bottom:.65rem;
+  border:1px solid var(--hairline-soft);
+}
+.road-step-num{
+  position:absolute;left:1.1rem;top:1rem;
+  font-family:'Cinzel',serif;font-size:1.05rem;font-weight:700;
+  color:var(--gold);line-height:1.4;
+}
+.road-step-title{
+  margin:0 0 .25rem;
+  font-family:'Cinzel',serif;font-size:.92rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--gold-pale);
+}
+.road-step-desc{margin:0;font-size:.92rem;line-height:1.55;color:var(--salt-dim)}
+/* Step 1 — being poured: solid outline */
+.road-step--outline{
+  border:1px solid var(--gold);
+  background:rgba(201,162,39,.08);
+  box-shadow:inset 0 0 0 1px rgba(201,162,39,.12);
+}
+.road-step--outline .road-step-desc{color:var(--salt)}
+/* Steps 2–8 — ghosted / blueprint */
+.road-step--ghost{
+  border-style:dashed;
+  border-color:rgba(201,162,39,.22);
+  background:transparent;
+  opacity:.62;
+}
+.road-step--ghost .road-step-title{color:rgba(255,239,193,.78)}
+.road-footnote{
+  margin:1.3rem 0 0;font-size:.84rem;color:var(--salt-faint);font-style:italic;
+}
+
+/* ---------- 7 · Story ---------- */
+.fact-list{margin:1.4rem 0 0;display:grid;gap:.7rem}
+.fact-block{
+  padding:1rem 1.15rem;
+  border-left:2px solid var(--gold-deep);
+  background:rgba(244,239,230,.03);
+}
+.fact-block p{margin:0;color:var(--salt-dim);font-size:.96rem;line-height:1.62}
+.fact-block strong,.fact-lead{
+  color:var(--salt);font-weight:600;
+}
+.interpretation-block{
+  margin-top:1.6rem;
+  padding:1.2rem 1.25rem 1.1rem;
+  border:1px solid var(--gold-deep);
+  outline:1px dashed rgba(201,162,39,.35);
+  outline-offset:5px;
+  background:rgba(61,42,8,.22);
+}
+.interpretation-label{
+  margin:0 0 .7rem;
+  font-size:.7rem;font-weight:700;
+  letter-spacing:.26em;text-transform:uppercase;
+  color:var(--gold);
+}
+.interpretation-block p{margin:0;color:var(--salt-dim);font-size:.95rem;line-height:1.65}
+
+/* ---------- 8 · Door / Support + footer ---------- */
+.door-list{margin:1.2rem 0 0;padding:0;list-style:none;display:grid;gap:.6rem}
+.door-item{
+  display:flex;flex-wrap:wrap;gap:.4rem .8rem;align-items:baseline;
+  padding:.85rem 1rem;
+  border:1px solid var(--hairline-soft);
+}
+.door-name{font-weight:700;color:var(--salt);min-width:5.2rem}
+.door-detail{color:var(--salt-dim)}
+.door-status{
+  margin-left:auto;
+  font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--gold);
+}
+.door-status--pending{color:var(--salt-faint)}
+.armor-line{
+  margin:1.4rem 0 0;
+  font-family:'Cinzel',serif;font-size:1rem;line-height:1.55;color:var(--gold-pale);
+}
+.honesty-block{
+  margin-top:1.8rem;padding-top:1.5rem;border-top:1px solid var(--hairline);
+}
+.honesty-block p{margin:0 0 1rem;color:var(--salt);font-size:.97rem;line-height:1.65}
+.footer-contract{
+  font-family:ui-monospace,Menlo,Consolas,monospace;
+  font-size:.78rem;color:var(--gold-pale);word-break:break-all;margin:0 0 1rem;
+}
+.sign-off{
+  margin:0;
+  font-family:'Cinzel',serif;font-size:1.05rem;letter-spacing:.12em;
+  color:var(--gold-pale);
+}
+.secrets-block{margin-top:2rem;padding-top:1.6rem;border-top:1px solid var(--hairline-soft)}
+.secrets-intro{margin:0 0 1.1rem;color:var(--salt-dim);font-size:.93rem;line-height:1.62}
+.secrets-list{margin:0;padding:0;list-style:none;display:grid;gap:.55rem}
+.secrets-list li{
+  font-family:ui-monospace,Menlo,Consolas,monospace;
+  font-size:.72rem;line-height:1.6;color:var(--salt-dim);
+  word-break:break-all;
+  padding:.6rem .75rem;
+  border:1px solid rgba(201,162,39,.14);
+  background:rgba(0,0,0,.18);
+}
+.secrets-list .secret-name{color:var(--gold-pale);font-weight:700}
+
+/* ---------- Responsive ---------- */
+@media (max-width:640px){
+  .town-panel{padding:2.1rem 1.35rem 1.9rem}
+  .panel-title{font-size:1.65rem}
+  .door-status{margin-left:0}
+  .road-step{padding-left:2.9rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .town-panel{scroll-behavior:auto}
+}
