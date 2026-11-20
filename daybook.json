@@ -1,0 +1,42 @@
+[
+  {
+    "n": 1,
+    "date": "2026-11-18",
+    "title": "The coin is struck",
+    "text": "PROVADIA launches on pump.fun — a fair launch, no presale, no team allocation. Contract: 9UE6NStA9pRZ5xagrK1FNy3vybmQVL2VaKB7BNpvpump. Supply 1,000,000,000, fixed.",
+    "prev": "0000000000000000000000000000000000000000000000000000000000000000",
+    "hash": "125c5db33f08fea96b2af14b250637efdc1a76b2a57891f93559242f898dc721"
+  },
+  {
+    "n": 2,
+    "date": "2026-11-18",
+    "title": "The founder's buy, in the open",
+    "text": "The founder buys 0.1 SOL of his own coin — about 0.35% of supply — disclosed in the launch receipts before any story was told.",
+    "prev": "125c5db33f08fea96b2af14b250637efdc1a76b2a57891f93559242f898dc721",
+    "hash": "ef54e408e8f73d4e399edf760ea6bbddbe998e576219f0a146557ea2d0caeb8d"
+  },
+  {
+    "n": 3,
+    "date": "2026-11-18",
+    "title": "The Golden Wall Covenant is signed",
+    "text": "20% of creator fees buy physical 1g gold bars into a named third-party vault, forever. The counter opens at 0 / 47. The Wall belongs to no one.",
+    "prev": "ef54e408e8f73d4e399edf760ea6bbddbe998e576219f0a146557ea2d0caeb8d",
+    "hash": "d969c567c87ec300fb8f31072eb6b7fcc978b435632417f3a3eac420054403fe"
+  },
+  {
+    "n": 4,
+    "date": "2026-11-19",
+    "title": "The town gets its name in the world",
+    "text": "provadiacoin.com is registered and the town site stands live at its own address.",
+    "prev": "d969c567c87ec300fb8f31072eb6b7fcc978b435632417f3a3eac420054403fe",
+    "hash": "d2f5af0a21d631fcfd0227663e1c570bfe53c90d15ed80ebd0be69b32d9c0767"
+  },
+  {
+    "n": 5,
+    "date": "2026-11-20",
+    "title": "The town is rebuilt as one world",
+    "text": "Four engines and the Streets are fused into one body on provadiacoin.com — one DNA, front to back.",
+    "prev": "d2f5af0a21d631fcfd0227663e1c570bfe53c90d15ed80ebd0be69b32d9c0767",
+    "hash": "6d9c277767e807e45c84ba33a40010d521cd74b63f169db69e687a06f04257b7"
+  }
+]
