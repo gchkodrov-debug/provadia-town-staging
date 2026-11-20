@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>PROVADIA — COIN ENGINE PROOF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --field: #141210;
+      --gold: #C9A227;
+      --pale-gold: #FFEFC1;
+      --salt: #F4EFE6;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--field);
+    }
+    body {
+      font-family: "Inter", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    #scene, #scene canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    #scene canvas {
+      touch-action: none;
+      cursor: grab;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #scene canvas:active { cursor: grabbing; }
+    .vignette {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 38%, rgba(20,18,16,.22) 66%, rgba(20,18,16,.88) 112%);
+    }
+    .brand {
+      position: fixed;
+      top: max(30px, env(safe-area-inset-top));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 3;
+      width: max-content;
+      max-width: 94vw;
+      text-align: center;
+      pointer-events: none;
+    }
+    .brand h1 {
+      margin: 0;
+      color: var(--pale-gold);
+      font-family: "Cinzel", serif;
+      font-size: clamp(26px, 3.2vw, 46px);
+      font-weight: 500;
+      line-height: 1.1;
+      letter-spacing: .29em;
+      text-indent: .29em;
+      text-shadow: 0 2px 24px rgba(201,162,38,.18);
+    }
+    .brand p {
+      margin: 11px 0 0;
+      color: rgba(244,239,230,.72);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: .23em;
+      text-indent: .23em;
+      white-space: nowrap;
+    }
+    .caption-wrap {
+      position: fixed;
+      left: 50%;
+      bottom: max(30px, env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      z-index: 3;
+      width: max-content;
+      max-width: 94vw;
+      text-align: center;
+    }
+    #markName {
+      margin: 0;
+      color: var(--pale-gold);
+      font-family: "Cinzel", serif;
+      font-size: clamp(21px, 3vw, 36px);
+      font-weight: 600;
+      letter-spacing: .34em;
+      text-indent: .34em;
+      text-shadow: 0 0 26px rgba(201,162,38,.35), 0 2px 18px rgba(201,162,38,.2);
+      transition: opacity .22s ease;
+    }
+    .rule {
+      width: 118px;
+      height: 1px;
+      margin: 15px auto 13px;
+      background: linear-gradient(90deg, transparent, rgba(201,162,38,.75), transparent);
+    }
+    .hint {
+      margin: 0;
+      color: rgba(244,239,230,.78);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .21em;
+      text-indent: .21em;
+      white-space: nowrap;
+    }
+    .controls {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    #flipBtn {
+      padding: 12px 24px 11px;
+      font-family: "Cinzel", serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .24em;
+      text-indent: .24em;
+      color: var(--pale-gold);
+      background: rgba(201,162,38,.07);
+      border: 1px solid rgba(201,162,38,.65);
+      border-radius: 999px;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 0 22px rgba(201,162,38,.12), inset 0 0 14px rgba(201,162,38,.06);
+      transition: background .25s ease, color .25s ease;
+    }
+    #flipBtn:hover { background: rgba(201,162,38,.16); }
+    #homeBtn {
+      padding: 12px 18px 11px;
+      font-family: "Inter", sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .2em;
+      text-indent: .2em;
+      color: rgba(244,239,230,.8);
+      background: transparent;
+      border: 1px solid rgba(244,239,230,.28);
+      border-radius: 999px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+    .poses {
+      margin-top: 13px;
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .poses a {
+      color: rgba(244,239,230,.55);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: .22em;
+      text-indent: .22em;
+      text-decoration: none;
+    }
+    .poses a:hover, .poses a.active { color: var(--pale-gold); }
+    #fade {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+      background: var(--field);
+      animation: clear-fade 2.2s ease-out both;
+    }
+    @keyframes clear-fade {
+      0%, 8% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    @media (max-width: 700px) {
+      .brand h1 { font-size: clamp(24px, 8vw, 33px); letter-spacing: .2em; text-indent: .2em; }
+      .brand p { font-size: 8px; letter-spacing: .13em; text-indent: .13em; }
+      #markName { font-size: clamp(19px, 6.4vw, 27px); letter-spacing: .26em; text-indent: .26em; }
+      .hint { font-size: 9px; letter-spacing: .15em; text-indent: .15em; }
+    }
+  </style>
+</head>
+<body>
+  <div id="scene" aria-hidden="true"></div>
+  <div class="vignette"></div>
+
+  <header class="brand">
+    <h1>PROVADIA</h1>
+    <p>THE COIN ENGINE · FORTRESS P &amp; THE SECRET SIDE</p>
+  </header>
+
+  <div class="caption-wrap">
+    <h2 id="markName">THE FORTRESS P</h2>
+    <div class="rule"></div>
+    <p class="hint">DRAG TO TILT · DOUBLE-CLICK TO FLIP</p>
+    <div class="controls">
+      <button id="flipBtn" type="button">FLIP THE COIN</button>
+      <button id="homeBtn" type="button">HOME — THE P</button>
+    </div>
+    <nav class="poses" id="poses">
+      <a href="?pose=front" data-pose="front">FRONT</a>
+      <a href="?pose=plain" data-pose="plain">PLAIN</a>
+      <a href="?pose=sceptre" data-pose="sceptre">SCEPTRE</a>
+      <a href="?pose=mask" data-pose="mask">MASK</a>
+      <a href="?pose=bull" data-pose="bull">BULL</a>
+      <a href="?pose=ring" data-pose="ring">RING-IDOL</a>
+    </nav>
+  </div>
+  <div id="fade"></div>
+
+  <script type="module">
+    import * as THREE from '../../lib/three.module.min.js';
+    import { createCoin, COIN_POSES } from './engine.js';
+
+    const COLORS = {
+      field: 0x141210,
+      gold: 0xC9A227,
+      paleGold: 0xFFEFC1,
+      deepGold: 0x6B4A12,
+      shadowGold: 0x3D2A08,
+      salt: 0xF4EFE6
+    };
+
+    const container = document.getElementById('scene');
+    const markNameEl = document.getElementById('markName');
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.12;
+    container.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(COLORS.field);
+    scene.fog = new THREE.FogExp2(COLORS.field, 0.02);
+
+    const camera = new THREE.PerspectiveCamera(43, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 2.6, 8.6);
+
+    // The ONE warm key light: 45 degrees, upper-left (host scene's job —
+    // the coin engine itself ships no key light).
+    const key = new THREE.DirectionalLight(COLORS.paleGold, 3.1);
+    key.position.set(-7, 11, 10);
+    key.castShadow = true;
+    key.shadow.mapSize.set(2048, 2048);
+    key.shadow.camera.left = -6;
+    key.shadow.camera.right = 6;
+    key.shadow.camera.top = 8;
+    key.shadow.camera.bottom = -4;
+    key.shadow.camera.near = 4;
+    key.shadow.camera.far = 40;
+    key.shadow.bias = -0.0004;
+    key.shadow.normalBias = 0.025;
+    key.target.position.set(0, 2.35, 0);
+    scene.add(key, key.target);
+
+    const hemisphere = new THREE.HemisphereLight(COLORS.salt, COLORS.field, 0.26);
+    scene.add(hemisphere);
+
+    const ground = new THREE.Mesh(
+      new THREE.CircleGeometry(42, 96),
+      new THREE.MeshStandardMaterial({ color: COLORS.field, roughness: 0.98, metalness: 0.02 })
+    );
+    ground.rotation.x = -Math.PI / 2;
+    ground.receiveShadow = true;
+    scene.add(ground);
+
+    // Short pedestal under the coin (top at y = 0.30; coin bottom 0.35).
+    const stone = new THREE.MeshStandardMaterial({ color: 0x1D1A16, roughness: 0.95, metalness: 0.05 });
+    const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(1.12, 1.38, 0.3, 48), stone);
+    pedestal.position.set(0, 0.15, 0);
+    pedestal.castShadow = true;
+    pedestal.receiveShadow = true;
+    scene.add(pedestal);
+    const trim = new THREE.Mesh(
+      new THREE.TorusGeometry(1.12, 0.022, 10, 72),
+      new THREE.MeshStandardMaterial({
+        color: COLORS.gold,
+        emissive: COLORS.deepGold,
+        emissiveIntensity: 0.22,
+        roughness: 0.32,
+        metalness: 0.58
+      })
+    );
+    trim.rotation.x = Math.PI / 2;
+    trim.position.set(0, 0.3, 0);
+    scene.add(trim);
+
+    // Soft gold glow behind the coin (from the Secret Side build).
+    const glowCanvas = document.createElement('canvas');
+    glowCanvas.width = 512;
+    glowCanvas.height = 512;
+    const gtx = glowCanvas.getContext('2d');
+    const glowGrad = gtx.createRadialGradient(256, 256, 10, 256, 256, 256);
+    glowGrad.addColorStop(0, 'rgba(201,162,38,0.30)');
+    glowGrad.addColorStop(0.45, 'rgba(107,74,18,0.14)');
+    glowGrad.addColorStop(1, 'rgba(20,18,16,0)');
+    gtx.fillStyle = glowGrad;
+    gtx.fillRect(0, 0, 512, 512);
+    const glow = new THREE.Mesh(
+      new THREE.PlaneGeometry(11, 11),
+      new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(glowCanvas), transparent: true, depthWrite: false })
+    );
+    glow.position.set(0, 2.45, -3.4);
+    scene.add(glow);
+
+    // ---------- THE COIN (engine) ----------
+    const query = new URLSearchParams(window.location.search);
+    const poseName = query.get('pose');
+    const hasPose = poseName !== null && Object.prototype.hasOwnProperty.call(COIN_POSES, poseName);
+
+    const { group, api } = createCoin({ idle: !hasPose, frontArtworkUrl: './front-published.jpg', pTextureUrl: './marks/fortress-p.png' });
+    group.position.set(0, 2.35, 0); // the town's placement contract
+    scene.add(group);
+    if (hasPose) api.setPose(poseName);
+    api.setInteractive(renderer.domElement, true);
+
+    document.querySelectorAll('#poses a').forEach(a => {
+      if (a.dataset.pose === poseName) a.classList.add('active');
+    });
+    document.getElementById('flipBtn').addEventListener('click', () => api.flip());
+    document.getElementById('homeBtn').addEventListener('click', () => api.homePose());
+
+    function resize() {
+      const width = Math.max(1, window.innerWidth);
+      const height = Math.max(1, window.innerHeight);
+      camera.aspect = width / height;
+      // Fit the WHOLE coin on narrow portrait screens (Secret Side logic).
+      const fitTan = 2.18 / 8.55;
+      let fov = 43;
+      if (Math.tan(THREE.MathUtils.degToRad(fov / 2)) * camera.aspect < fitTan) {
+        fov = Math.min(75, THREE.MathUtils.radToDeg(2 * Math.atan(fitTan / camera.aspect)));
+      }
+      camera.fov = fov;
+      camera.updateProjectionMatrix();
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setSize(width, height);
+    }
+    window.addEventListener('resize', resize, { passive: true });
+    resize();
+
+    let currentCaption = 'THE FORTRESS P';
+    function setCaption(text) {
+      if (text === currentCaption) return;
+      currentCaption = text;
+      markNameEl.style.opacity = '0';
+      setTimeout(() => {
+        markNameEl.textContent = text;
+        markNameEl.style.opacity = '1';
+      }, 180);
+    }
+
+    const startTime = performance.now();
+    let previousTime = startTime;
+
+    function animate(now) {
+      requestAnimationFrame(animate);
+      const elapsed = (now - startTime) / 1000;
+      const delta = Math.min(Math.max((now - previousTime) / 1000, 0), 0.05);
+      previousTime = now;
+
+      api.update(delta, elapsed);
+      setCaption(api.getState().caption);
+
+      // Readable state for verification.
+      window.__coinProof = api.getState();
+
+      camera.lookAt(0, 2.3, 0);
+      renderer.render(scene, camera);
+    }
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>
