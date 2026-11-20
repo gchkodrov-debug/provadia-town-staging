@@ -1,0 +1,225 @@
+<!-- PROVADIA — Town of Record · Station Panels (fragment)
+     Lift all <section> blocks into the town shell. Styles: panels.css
+     Stations in journey order: arrival · gate · square · wall · registry · road · story · door -->
+
+<!-- 1 · ARRIVAL -->
+<section class="town-panel" data-station="arrival" id="station-arrival" aria-label="Arrival">
+  <div class="panel-inner">
+    <p class="panel-eyebrow">Europe's First Town of Record</p>
+    <h1 class="panel-title panel-title--xl">Provadia</h1>
+    <p class="panel-lead">You are not reading about a town. You are standing in one.</p>
+    <p class="panel-small">Scroll, traveller — the street will take thee down to the Wall.</p>
+  </div>
+</section>
+
+<!-- 2 · GATE -->
+<section class="town-panel" data-station="gate" id="station-gate" aria-label="The Gate">
+  <div class="panel-inner">
+    <p class="panel-eyebrow">The Gate</p>
+    <h2 class="panel-title">The Gate</h2>
+    <p class="panel-body">Every town of record begins at a gate. Ours is watched by the Captain — the keeper of the Wall and the book. He stands at the door of this town, and his tales are true: what he tells thee, he can show thee.</p>
+  </div>
+</section>
+
+<!-- 3 · SQUARE — THE COIN -->
+<section class="town-panel" data-station="square" id="station-square" aria-label="The Coin">
+  <div class="panel-inner">
+    <p class="panel-eyebrow">The Coin</p>
+    <h2 class="panel-title">The Coin</h2>
+    <p class="panel-body">The Fortress P — the name of the coin, struck in salt bricks and crowned with seven battlements. It is the first thing the town shows thee, and the last it lets thee forget.</p>
+    <p class="panel-body">Turn it over. The back keeps secrets: tilt it, and the age looks back — a sceptre, a mask, a bull, a ring — rising out of the gold one at a time, around the letter that never leaves.</p>
+
+    <div class="contract-block">
+      <p class="contract-label">The coin's only name on-chain:</p>
+      <div class="contract-row">
+        <p class="contract-address" id="contractAddress">9UE6NStA9pRZ5xagrK1FNy3vybmQVL2VaKB7BNpvpump</p>
+        <button class="copy-btn" type="button" data-copy-target="contractAddress" aria-label="Copy contract address">Copy</button>
+      </div>
+      <ul class="contract-links">
+        <li><a href="https://pump.fun/coin/9UE6NStA9pRZ5xagrK1FNy3vybmQVL2VaKB7BNpvpump" target="_blank" rel="noopener">Trade on pump.fun</a></li>
+        <li><a href="https://dexscreener.com/solana/2fvtfwcco71j8xepws7yrez3569u2gxu4fyhe2h8oxdy" target="_blank" rel="noopener">The pair on Dexscreener</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 4 · WALL — THE GOLDEN WALL -->
+<section class="town-panel" data-station="wall" id="station-wall" aria-label="The Golden Wall">
+  <div class="panel-inner">
+    <p class="panel-eyebrow">The Golden Wall</p>
+    <h2 class="panel-title">The Golden Wall</h2>
+
+    <p class="wall-counter" aria-label="0 of 47 bricks laid">0 / 47</p>
+    <p class="wall-counter-sub">bricks laid · 0 grams of gold in the vault</p>
+
+    <div class="wall-slot">
+      <p>One slot waits — outlined, patient. A brick appears here only when it exists: bought, receipted, photographed, its serial written in the book. The Wall is the town's shadow of the truth; it has never shown a brick that was not real.</p>
+    </div>
+
+    <p class="panel-body">At 47 bricks — or the coin's first birthday — the Wall's fate is voted by the Bricklayers: burial at Provadia, or donation to the Varna Regional Museum. It can never be sold. It is never backing, and never redeemable.</p>
+
+    <div class="sub-block">
+      <h3 class="sub-block-title">The Night Brick</h3>
+      <p class="panel-body">Every night at 21:00 UTC the town posts the counter and one true fact, and the Bricklayers answer: 🧱</p>
+      <p class="night-brick-countdown">next Night Brick in — <span id="nightBrickCountdown"></span></p>
+    </div>
+
+    <div class="bell-line">
+      <p>The town bell tolls only when the ledger rings it — once per brick laid. The bell has never rung.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · REGISTRY — THE BOOK OF BRICKLAYERS -->
+<section class="town-panel" data-station="registry" id="station-registry" aria-label="The Book of Bricklayers">
+  <div class="panel-inner">
+    <p class="panel-eyebrow">The Book of Bricklayers</p>
+    <h2 class="panel-title">The Book of Bricklayers</h2>
+    <p class="registry-empty">No name is written yet.</p>
+    <p class="panel-body">The first name enters this book when the first brick is laid in the Wall — with its receipt beside it. Names and brick numbers only. Never holdings, never value. The book grows only when the Wall does.</p>
+    <div class="registry-treasure">
+      <p>My brick is in the Wall — that sentence is the whole of the treasure.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · ROAD -->
+<section class="town-panel" data-station="road" id="station-road" aria-label="The Road">
+  <div class="panel-inner">
+    <p class="panel-eyebrow">The Road</p>
+    <h2 class="panel-title">The Road</h2>
+    <p class="panel-body">A roadmap here is not a promise list. It is a road: paved exactly as far as we have travelled, and not one inch further.</p>
+
+    <ol class="road-list">
+      <li class="road-step road-step--outline">
+        <span class="road-step-num" aria-hidden="true">1</span>
+        <h3 class="road-step-title">The Foundation</h3>
+        <p class="road-step-desc">Brick #1, bought with the founder's own money and receipted in the open · the Charter · the Day-Book opens</p>
+      </li>
+      <li class="road-step road-step--ghost">
+        <span class="road-step-num" aria-hidden="true">2</span>
+        <h3 class="road-step-title">The Promise Machine</h3>
+        <p class="road-step-desc">the site grades its own promises, in public, forever</p>
+      </li>
+      <li class="road-step road-step--ghost">
+        <span class="road-step-num" aria-hidden="true">3</span>
+        <h3 class="road-step-title">The Liveness Layer</h3>
+        <p class="road-step-desc">the town reports its own heartbeat, silence included</p>
+      </li>
+      <li class="road-step road-step--ghost">
+        <span class="road-step-num" aria-hidden="true">4</span>
+        <h3 class="road-step-title">The Signed Captain</h3>
+        <p class="road-step-desc">the town's officer, auditable</p>
+      </li>
+      <li class="road-step road-step--ghost">
+        <span class="road-step-num" aria-hidden="true">5</span>
+        <h3 class="road-step-title">The Town Build-Out</h3>
+        <p class="road-step-desc">streets rise as the Wall rises</p>
+      </li>
+      <li class="road-step road-step--ghost">
+        <span class="road-step-num" aria-hidden="true">6</span>
+        <h3 class="road-step-title">The Brick Lock</h3>
+        <p class="road-step-desc">the Wall's custody, locked in code</p>
+      </li>
+      <li class="road-step road-step--ghost">
+        <span class="road-step-num" aria-hidden="true">7</span>
+        <h3 class="road-step-title">The Fee Card</h3>
+        <p class="road-step-desc">every fee, receipted</p>
+      </li>
+      <li class="road-step road-step--ghost">
+        <span class="road-step-num" aria-hidden="true">8</span>
+        <h3 class="road-step-title">The Covenant Kit</h3>
+        <p class="road-step-desc">the covenant, whole, for anyone to check</p>
+      </li>
+    </ol>
+
+    <p class="road-footnote">No dates are promised on this road, beyond the Tuesdays of the Seven Secrets and the coin's first birthday.</p>
+  </div>
+</section>
+
+<!-- 7 · STORY — THE TRUE STORY -->
+<section class="town-panel" data-station="story" id="station-story" aria-label="The True Story">
+  <div class="panel-inner">
+    <p class="panel-eyebrow">The True Story</p>
+    <h2 class="panel-title">The True Story</h2>
+    <h3 class="panel-subtitle">What the ground says</h3>
+
+    <div class="fact-list">
+      <div class="fact-block">
+        <p><span class="fact-lead">Found by accident —</span> In October 1972 an excavator operator, Raycho Marinov, struck gold in Varna's industrial zone and carried a shoebox of it to the museum. The cemetery was dug from 1972 to 1991.</p>
+      </div>
+      <div class="fact-block">
+        <p><span class="fact-lead">The dating —</span> Radiocarbon puts the Varna cemetery in use about 4560–4450 BC — some 6,500 years ago. Provadia-Solnitsata made salt from about 5500 BC; its fortified age is 4700–4200 BC.</p>
+      </div>
+      <div class="fact-block">
+        <p><span class="fact-lead">The gold —</span> More than 3,000 objects, over 6 kg, in 28 kinds: sceptres, diadems, bracelets, beads by the thousand, rings and ring-idols, gold cattle, gold-painted pottery. And copper, flint, carnelian, and shell from the Mediterranean.</p>
+      </div>
+      <div class="fact-block">
+        <p><span class="fact-lead">The chief —</span> Grave 43 held a man of 40–50 with over 990 gold objects, 1.5 kg in all, and a sceptre — a stone axe on a gold-sheathed shaft. The museum calls him most likely a chief and priest. No name survives; his people had no writing.</p>
+      </div>
+      <div class="fact-block">
+        <p><span class="fact-lead">The fortress —</span> The salt town stood behind stone walls up to 3 metres thick, with bastions and a gate — raised, the ground shows, over salt made in tons.</p>
+      </div>
+    </div>
+
+    <div class="interpretation-block" role="note" aria-label="Interpretation — not settled fact">
+      <p class="interpretation-label">Interpretation — Not Settled Fact</p>
+      <p>Professor Vasil Nikolov, the salt town's excavator since 2005, holds that salt was money — that the salt brick was currency and Provadia Europe's first mint, and that salt wealth explains Varna's gold. He admits there is no direct evidence for how the trade worked; other scholars call 'Europe's oldest town' hyperbole. In this town we tell it as what it is: one professor's reading of the ground.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 · DOOR — THE SUPPORT DESK + FOOTER -->
+<section class="town-panel" data-station="door" id="station-door" aria-label="The Support Desk">
+  <div class="panel-inner">
+    <p class="panel-eyebrow">The Support Desk</p>
+    <h2 class="panel-title">The Support Desk</h2>
+    <p class="panel-body">The only official doors of this town:</p>
+
+    <ul class="door-list">
+      <li class="door-item">
+        <span class="door-name">Email</span>
+        <span class="door-detail"><a href="mailto:support@provadiacoin.com">support@provadiacoin.com</a></span>
+        <span class="door-status">Live</span>
+      </li>
+      <li class="door-item">
+        <span class="door-name">X</span>
+        <span class="door-detail"><a href="https://x.com/ProvadiaCoin" target="_blank" rel="noopener">@ProvadiaCoin</a></span>
+        <span class="door-status">Live</span>
+      </li>
+      <li class="door-item">
+        <span class="door-name">Telegram</span>
+        <span class="door-detail">the town channel</span>
+        <span class="door-status door-status--pending">Opens with Brick #1</span>
+      </li>
+      <li class="door-item">
+        <span class="door-name">Discord</span>
+        <span class="door-detail">the town's hall</span>
+        <span class="door-status door-status--pending">Opens at 100 Bricklayers</span>
+      </li>
+    </ul>
+
+    <p class="armor-line">We never DM first. If a door is not listed here, it is not ours.</p>
+    <p class="panel-body" style="margin-top:1rem">The desk is watched around the clock, every day — a citizen's message is never left unanswered.</p>
+
+    <div class="honesty-block">
+      <p>PROVADIA is a place, not an investment. Holding it names you a Bricklayer in the town registry and gives you a vote on the Wall's fate — and nothing else: no redemption, no yield, no rights, no expected return.</p>
+      <p class="footer-contract">9UE6NStA9pRZ5xagrK1FNy3vybmQVL2VaKB7BNpvpump</p>
+      <p class="sign-off">Salt pays.</p>
+    </div>
+
+    <div class="secrets-block">
+      <h3 class="sub-block-title">The Seven Secrets — Commitments</h3>
+      <p class="secrets-intro">Every secret was committed here before it was told. Each hash is the SHA-256 of a salt plus that secret's final text. When a secret is revealed, its salt is published with it — so anyone can recompute the hash and check it against its line.</p>
+      <ul class="secrets-list">
+        <li><span class="secret-name">Secret 1</span> — SHA-256: bd87e81783b985c67c058bbc03f040a7e46ee47b692ebbe98e8d56b42408aa5a</li>
+        <li><span class="secret-name">Secret 2</span> — SHA-256: 4c708c9c9fd0235afe4bab722f0cbdc9399ef37e740014fcbbb38611e51b4406</li>
+        <li><span class="secret-name">Secret 4</span> — SHA-256: 7323eed62295b991d55dca3cf29b58e7cb86db59d18b63e46010a175457ec6f9</li>
+        <li><span class="secret-name">Secret 3</span> — SHA-256: 08e5d41ffae7ca942b757971f5a85f6076f4c3d3c1db054ae194757fd49755ec</li>
+        <li><span class="secret-name">Secret 5</span> — SHA-256: f81757e0fc7d275fe033169782a44e1dadccdac1d8b958007ef209e82bc23edf</li>
+        <li><span class="secret-name">Secret 6</span> — SHA-256: b4812005651022572b55932fd46ba4b06c73462d003819f9c7847875d8d86053</li>
+        <li><span class="secret-name">Secret 7</span> — SHA-256: 4058b2e9586e38df6465b2f91ff4f9820ac9e81d874411c6687aa31274e41b7b</li>
+      </ul>
+    </div>
+  </div>
+</section>
