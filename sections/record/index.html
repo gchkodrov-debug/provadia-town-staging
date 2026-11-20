@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROVADIA — Record &amp; Market (proof)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="panels.css">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #141210; color: #F4EFE6; font-family: Inter, system-ui, sans-serif; }
+  .proof-nav {
+    position: sticky; top: 0; z-index: 10; display: flex; flex-wrap: wrap; gap: .5rem;
+    justify-content: center; align-items: center; padding: .8rem 1rem;
+    background: rgba(20,18,16,.94); border-bottom: 1px solid rgba(201,162,39,.4);
+    backdrop-filter: blur(6px);
+  }
+  .proof-nav .brand { font-family: Cinzel, serif; color: #FFEFC1; letter-spacing: .25em; margin-right: 1rem; font-size: .9rem; }
+  .proof-nav a {
+    color: #C9A227; text-decoration: none; font-family: Cinzel, serif; font-size: .8rem;
+    letter-spacing: .15em; text-transform: uppercase; border: 1px solid rgba(201,162,39,.5);
+    padding: .45rem .9rem; border-radius: 6px;
+  }
+  .proof-nav a:hover { background: #C9A227; color: #3D2A08; }
+  footer { text-align: center; padding: 2rem 1rem 3rem; font-size: .8rem; opacity: .6; }
+</style>
+</head>
+<body>
+
+<nav class="proof-nav">
+  <span class="brand">PROVADIA</span>
+  <a href="#station-market">Market</a>
+  <a href="#station-record">Record</a>
+  <a href="#station-fees">Fees</a>
+  <a href="#station-charter">Charter</a>
+</nav>
+
+<main id="panels-mount"></main>
+
+<footer>Standalone proof of the Record &amp; Market layer — the same fragments mount into the town shell unchanged.</footer>
+
+<script>
+  // Mount the real fragments (single source of truth: panels.html).
+  fetch("panels.html").then(r => r.text()).then(html => {
+    document.getElementById("panels-mount").innerHTML = html;
+    const s = document.createElement("script");
+    s.type = "module"; s.src = "record.js";
+    document.body.appendChild(s);
+  });
+</script>
+</body>
+</html>
