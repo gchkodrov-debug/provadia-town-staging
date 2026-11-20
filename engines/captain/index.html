@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Captain — Provadia · Front Door Proof</title>
+<meta name="description" content="Proof chamber for the Captain engine: the golden face, his greeting, his receipted tales, and the live seat (unwired in this build).">
+<!--
+  LIVE SEAT SWITCH: set content to the Captain host base URL
+  (e.g. content="https://captain.provadiacoin.com") and nothing else changes.
+  Empty = the seat honestly waits, input disabled. See MODULE.md.
+-->
+<meta name="captain-api" content="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --field:#141210; --salt:#F4EFE6; --gold:#C9A227; }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; background:var(--field); }
+  body{
+    font-family:'Inter',system-ui,sans-serif; color:var(--salt);
+    background:
+      radial-gradient(ellipse 1100px 600px at 50% -120px, rgba(201,162,39,.10), rgba(20,18,16,0) 65%),
+      var(--field);
+    min-height:100vh; padding:clamp(14px,3.5vw,44px);
+  }
+  main{ max-width:1180px; margin:0 auto; }
+  .proof-note{
+    max-width:1180px; margin:0 auto 14px; font-size:12.5px; letter-spacing:.05em;
+    color:rgba(244,239,230,.5);
+  }
+  .proof-note strong{ color:var(--gold); font-weight:600; }
+</style>
+</head>
+<body>
+<main>
+  <p class="proof-note"><strong>CAPTAIN ENGINE — STANDALONE PROOF.</strong>
+  Face left · greeting &amp; honesty sentence right · tales below · the seat at the bottom.
+  The seat is unwired in this build (<code>captain-api</code> is empty), so its input is honestly disabled.</p>
+
+  <div data-captain-root></div>
+</main>
+
+<script type="module">
+  import { mountCaptain } from './captain.js';
+  mountCaptain(document.querySelector('[data-captain-root]'));
+</script>
+</body>
+</html>
