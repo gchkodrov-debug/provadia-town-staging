@@ -1,0 +1,98 @@
+<!-- PROVADIA — RECORD & MARKET panels (fragments for the town shell)
+     Mount with panels.css + record.js. record.js fills:
+       [data-price-grid] [data-price-source]           — MARKET price face
+       [data-daybook-list] [data-verify-verdict]       — RECORD verifier
+       [data-anchor-root] [data-anchor-payload]        — RECORD anchor
+     No numbers are hard-coded anywhere in these fragments. -->
+
+<!-- ============ STATION · MARKET ============ -->
+<section class="rec-panel" id="station-market" data-station="market">
+  <header class="rec-head">
+    <p class="rec-eyebrow">Station · Market</p>
+    <h2 class="rec-title">The Market Face</h2>
+    <p class="rec-lede">The coin trades where the crowd trades it. This face shows only what its source reports, at the moment it reports it — nothing drawn in by hand.</p>
+  </header>
+
+  <div class="rec-card">
+    <div data-price-grid>
+      <p class="rec-note">reaching for its source…</p>
+    </div>
+    <p class="rec-source" data-price-source>Source: Dexscreener · reaching for its source…</p>
+    <p class="rec-note">Figures refresh every 60 seconds. If the source cannot be reached, the last receipted figures stay up, labelled with their time.</p>
+    <div class="rec-links">
+      <a href="https://pump.fun/coin/9UE6NStA9pRZ5xagrK1FNy3vybmQVL2VaKB7BNpvpump" target="_blank" rel="noopener">The coin on pump.fun</a>
+      <a href="https://dexscreener.com/solana/2fvtfwcco71j8xepws7yrez3569u2gxu4fyhe2h8oxdy" target="_blank" rel="noopener">The pair on Dexscreener</a>
+    </div>
+    <div class="rec-row"><span class="rec-k">Contract</span><span class="rec-v rec-mono">9UE6NStA9pRZ5xagrK1FNy3vybmQVL2VaKB7BNpvpump</span></div>
+    <div class="rec-row"><span class="rec-k">Supply</span><span class="rec-v">1,000,000,000 · fixed</span></div>
+    <div class="rec-row"><span class="rec-k">Launch</span><span class="rec-v">Fair launch on pump.fun — no presale, no team allocation</span></div>
+  </div>
+
+  <blockquote class="rec-honesty">PROVADIA is a place, not an investment. Holding it names you a Bricklayer in the town registry and gives you a vote on the Wall’s fate — and nothing else: no redemption, no yield, no rights, no expected return.</blockquote>
+</section>
+
+<!-- ============ STATION · RECORD (THE DAY-BOOK) ============ -->
+<section class="rec-panel" id="station-record" data-station="record">
+  <header class="rec-head">
+    <p class="rec-eyebrow">Station · Record</p>
+    <h2 class="rec-title">The Day-Book</h2>
+    <p class="rec-lede">The town's public record. Every entry is chained to the one before it by its hash — change a single letter anywhere and the chain breaks, in the open. Your browser recomputes the whole chain below, on your own machine. No custom on-chain program: the record verifies itself.</p>
+  </header>
+
+  <div class="rec-card">
+    <p class="rec-verdict" data-verify-verdict data-state="working">Recomputing every entry in your browser…</p>
+    <ol class="rec-list" data-daybook-list></ol>
+  </div>
+
+  <div class="rec-card">
+    <h3 class="rec-subtitle">The Daily Anchor</h3>
+    <div class="rec-row"><span class="rec-k">Today's root</span><span class="rec-v rec-mono" data-anchor-root>—</span></div>
+    <p class="rec-note">The root is the SHA-256 of the last entry's hash — one fingerprint for the whole book. Written to Solana as a Memo, it would read exactly:</p>
+    <code class="rec-payload" data-anchor-payload>PROVADIA DAYBOOK ROOT · 2026-11-20 · —</code>
+    <p class="rec-note"><strong>Daily anchor:</strong> the root is computed and ready. The anchor transaction is signed by the founder's hand only — awaiting founder signature.</p>
+    <h4 class="rec-subtitle rec-subtitle-sm">Past anchors</h4>
+    <p class="rec-note">No anchor has been written yet.</p>
+  </div>
+</section>
+
+<!-- ============ STATION · FEES ============ -->
+<section class="rec-panel" id="station-fees" data-station="fees">
+  <header class="rec-head">
+    <p class="rec-eyebrow">Station · Fees</p>
+    <h2 class="rec-title">The Fee Card</h2>
+    <p class="rec-lede">What the coin pays, and to whom — verified against pump.fun's own published fee documentation (fees page, last updated 16 November 2026). Rates are pump.fun's schedule and can change on their word; the split below is the town's covenant and does not change.</p>
+  </header>
+
+  <div class="rec-card">
+    <div class="rec-row"><span class="rec-k">On the bonding curve</span><span class="rec-v">Creator fee 0.300% of every trade, paid in SOL</span></div>
+    <div class="rec-row"><span class="rec-k">After graduation</span><span class="rec-v">Creator fees continue on the canonical PumpSwap pool, tiered by market cap — 0.300% in the lowest band, peaking at 0.950%, stepping down to 0.050% at the largest caps. Only the canonical pool pays a creator fee; other pools pay 0%.</span></div>
+    <div class="rec-row"><span class="rec-k">Liquidity at migration</span><span class="rec-v">The bonding curve's liquidity migrates to PumpSwap and the LP tokens are burnt — not locked, burnt. Nobody can withdraw the migrated liquidity.</span></div>
+    <div class="rec-row"><span class="rec-k">The split</span><span class="rec-v">Creator fees split 80 / 20 — eighty percent is the founder's income, his pay for building and running the project, disclosed in the open. Twenty percent goes to the Golden Wall, off the top, forever.</span></div>
+    <p class="rec-note">The founder's only income from this project is the disclosed creator fees. Nothing else is skimmed, and no return is promised to anybody.</p>
+  </div>
+</section>
+
+<!-- ============ STATION · CHARTER ============ -->
+<section class="rec-panel" id="station-charter" data-station="charter">
+  <header class="rec-head">
+    <p class="rec-eyebrow">Station · Charter</p>
+    <h2 class="rec-title">The Charter</h2>
+    <p class="rec-lede">The law of the Golden Wall, published as record. It rides in every launch post, word for word.</p>
+  </header>
+
+  <div class="rec-card">
+    <blockquote class="rec-charter">20% of creator fees buys physical 1g gold bars stored in a named third-party bullion vault. Each brick: receipt, photo, serial posted to public counter /47. The wall belongs to no one. It cannot be sold. It will be buried at Provadia or donated to a museum, by Bricklayer vote. Nothing else can happen to it. Never backing, never redeemable.</blockquote>
+
+    <h3 class="rec-subtitle">The covenant, in brief</h3>
+    <div class="rec-row"><span class="rec-k">The bricks</span><span class="rec-v">Serial-numbered 1g physical gold bars, bought from a named dealer the moment the accumulated 20% share covers 1g spot plus premium, shipping and vault costs.</span></div>
+    <div class="rec-row"><span class="rec-k">Custody</span><span class="rec-v">Allocated storage at a named, licensed third-party bullion vault. The founder never physically holds the bars.</span></div>
+    <div class="rec-row"><span class="rec-k">The one withdrawal</span><span class="rec-v">ONE withdrawal is permitted, ever — the end ceremony — announced 7 days ahead, with dealer confirmation of dispatch.</span></div>
+    <div class="rec-row"><span class="rec-k">Proof</span><span class="rec-v">Per brick: receipt, photo and serial posted publicly to the counter. The counter stands at 0 / 47.</span></div>
+    <div class="rec-row"><span class="rec-k">The end</span><span class="rec-v">At 47 bricks or the coin's first birthday, whichever comes first. The Bricklayer vote chooses only between burial at Provadia or donation to the Varna Regional Museum. The gold is never sold, never backing, never redeemable.</span></div>
+
+    <h3 class="rec-subtitle">The founder statutes, in brief</h3>
+    <div class="rec-row"><span class="rec-k">Giveback</span><span class="rec-v">No airdrops of value to holders — announced or proportional — ever. The project's giving is structural: the Wall, the town, and the public record.</span></div>
+    <div class="rec-row"><span class="rec-k">Surprise Honors</span><span class="rec-v">Rare, unannounced, for deeds done for the town — never for holdings, never promised, never marketed. Standard form: a brick laid into the Wall in the citizen's honor, paid from the founder's own share, the name and the deed recorded in the Day-Book.</span></div>
+    <div class="rec-row"><span class="rec-k">Reinvestment</span><span class="rec-v">The site and the contract earn nothing for anybody. The founder's only income is the disclosed creator fees, split 80 / 20 as the Fee Card states. No trading for anybody. No promises sold to anybody.</span></div>
+  </div>
+</section>
