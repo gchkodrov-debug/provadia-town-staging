@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="captain-api" content="">
+<title>PROVADIA — Europe's First Town of Record</title>
+<meta name="description" content="Provadia — the living digital reconstruction of Europe's oldest salt town. The Fortress P coin, the Golden Wall at 0/47, the Captain at the gate, and a public record your own browser can verify.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sections/panels.css">
+<link rel="stylesheet" href="sections/record/panels.css">
+<style>
+  :root{--field:#141210;--gold:#C9A227;--pale:#FFEFC1;--deep:#6B4A12;--ink:#3D2A08;--salt:#F4EFE6}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--field);color:var(--salt);font-family:Inter,system-ui,sans-serif}
+  body{overflow-x:hidden}
+  #stage{position:fixed;inset:0;z-index:0}
+  #stage canvas{display:block}
+  #scroll-space{height:700vh;position:relative;z-index:1;pointer-events:none}
+  #fade{position:fixed;inset:0;background:#000;z-index:40;pointer-events:none;transition:opacity 2.4s ease}
+  #fade.gone{opacity:0}
+  #err{position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:60;display:none;max-width:92vw;background:rgba(40,8,4,.92);border:1px solid rgba(255,150,120,.5);color:#ffc9b8;padding:.6rem .9rem;font-size:.82rem;border-radius:4px}
+  #caption{position:fixed;left:22px;bottom:20px;z-index:6;pointer-events:none;font-family:Cinzel,serif;letter-spacing:.26em;color:var(--pale);font-size:13px;text-transform:uppercase;text-shadow:0 2px 14px rgba(0,0,0,.8)}
+  #caption small{display:block;margin-top:7px;font-family:Inter,sans-serif;letter-spacing:.12em;font-size:10.5px;color:rgba(244,239,230,.6);text-transform:none}
+  .stack{position:fixed;z-index:5;right:20px;top:50%;width:min(434px,calc(100vw - 24px));max-height:88vh;overflow-y:auto;padding:2px;opacity:0;pointer-events:none;transform:translateY(-50%) translateX(14px);transition:opacity .55s ease,transform .55s ease;scrollbar-width:thin;scrollbar-color:var(--deep) transparent}
+  .stack.active{opacity:1;pointer-events:auto;transform:translateY(-50%) translateX(0)}
+  .stack .town-panel{margin:0 0 14px}
+  .stack .town-panel:last-child{margin-bottom:2px}
+  .coin-btns{display:flex;flex-wrap:wrap;gap:8px;margin:.4rem 0 .6rem}
+  .coin-btns button{flex:1 1 auto;background:rgba(201,162,39,.08);border:1px solid rgba(201,162,39,.55);color:var(--pale);font-family:Cinzel,serif;letter-spacing:.12em;font-size:.72rem;padding:.62rem .5rem;cursor:pointer;text-transform:uppercase;transition:background .2s,border-color .2s}
+  .coin-btns button:hover{background:rgba(201,162,39,.2);border-color:var(--gold)}
+  .coin-state{font-family:Cinzel,serif;letter-spacing:.22em;color:var(--gold);font-size:.8rem;margin:.2rem 0}
+  .coin-hint{font-size:.78rem;color:rgba(244,239,230,.55);margin:.1rem 0 0}
+  @media (max-width:760px){
+    .stack{right:12px;left:12px;width:auto;top:auto;bottom:12px;max-height:54vh;transform:translateY(14px)}
+    .stack.active{transform:none}
+    #caption{left:14px;bottom:auto;top:12px;font-size:11px}
+  }
+</style>
+</head>
+<body>
+<div id="stage" aria-hidden="true"></div>
+<div id="scroll-space" aria-hidden="true"></div>
+<div id="fade"></div>
+<div id="err" role="alert"></div>
+<div id="caption"><span id="captionName">Arrival</span><small>scroll — the street takes thee down to the Wall</small></div>
+
+<main id="stacks">
+  <div class="stack" data-stack="arrival"><section class="town-panel" data-station="arrival" id="station-arrival" aria-label="Arrival">
+  <div class="panel-inner">
+    <p class="panel-eyebrow">Europe's First Town of Record</p>
+    <h1 class="panel-title panel-title--xl">Provadia</h1>
+    <p class="panel-lead">You are not reading about a town. You are standing in one.</p>
+    <p class="panel-small">Scroll, traveller — the street will take thee down to the Wall.</p>
+  </div>
+</section></div>
+  <div class="stack" data-stack="gate"><section class="town-panel" data-station="gate" id="station-gate" aria-label="The Gate">
+  <div class="panel-inner">
+    <p class="panel-eyebrow">The Gate</p>
+    <h2 class="panel-title">The Gate</h2>
+    <p class="panel-body">Every town of record begins at a gate. Ours is watched by the Captain — the keeper of the Wall and the book. He stands at the door of this town, and his tales are true: what he tells thee, he can show thee.</p>
+  </div>
+</section></div>
+  <div class="stack" data-stack="captain">
+    <section class="town-panel cap-panel" aria-label="The Captain at the front door">
+      <div class="panel-inner"><div data-captain-root></div></div>
+    </section>
+  </div>
+  <div class="stack" data-stack="square"><section class="town-panel" data-station="square" id="station-square" aria-label="The Coin">
+  <div class="panel-inner">
+    <p class="panel-eyebrow">The Coin</p>
+    <h2 class="panel-title">The Coin</h2>
+    <p class="panel-body">The Fortress P — the name of the coin, struck in salt bricks and crowned with seven battlements. It is the first thing the town shows thee, and the last it lets thee forget.</p>
+    <p class="panel-body">Turn it over. The back keeps secrets: tilt it, and the age looks back — a sceptre, a mask, a bull, a ring — rising out of the gold one at a time, around the letter that never leaves.</p>
+
+    <div class="contract-block">
+      <p class="contract-label">The coin's only name on-chain:</p>
+      <div class="contract-row">
+        <p class="contract-address" id="contractAddress">9UE6NStA9pRZ5xagrK1FNy3vybmQVL2VaKB7BNpvpump</p>
+        <button class="copy-btn" type="button" data-copy-target="contractAddress" aria-label="Copy contract address">Copy</button>
+      </div>
+      <ul class="contract-links">
+        <li><a href="https://pump.fun/coin/9UE6NStA9pRZ5xagrK1FNy3vybmQVL2VaKB7BNpvpump" target="_blank" rel="noopener">Trade on pump.fun</a></li>
+        <li><a href="https://dexscreener.com/solana/2fvtfwcco71j8xepws7yrez3569u2gxu4fyhe2h8oxdy" target="_blank" rel="noopener">The pair on Dexscreener</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+    <section class="town-panel coin-controls" aria-label="Coin controls">
+      <div class="panel-inner">
+        <p class="panel-eyebrow">The Coin Is Alive</p>
+        <div class="coin-btns">
+          <button type="button" data-coin="left">&#9664; Tilt</button>
+          <button type="button" data-coin="flip">Flip the Coin</button>
+          <button type="button" data-coin="right">Tilt &#9654;</button>
+          <button type="button" data-coin="home">Home — the P</button>
+        </div>
+        <p class="coin-state" id="coinState">THE FORTRESS P</p>
+        <p class="coin-hint">Tilt it far, both ways — the back keeps secrets. On a computer, thou mayest also drag the coin itself.</p>
+      </div>
+    </section>
+  </div>
+  <div class="stack" data-stack="wall"><section class="town-panel" data-station="wall" id="station-wall" aria-label="The Golden Wall">
+  <div class="panel-inner">
+    <p class="panel-eyebrow">The Golden Wall</p>
+    <h2 class="panel-title">The Golden Wall</h2>
+
+    <p class="wall-counter" aria-label="0 of 47 bricks laid">0 / 47</p>
+    <p class="wall-counter-sub">bricks laid · 0 grams of gold in the vault</p>
+
+    <div class="wall-slot">
+      <p>One slot waits — outlined, patient. A brick appears here only when it exists: bought, receipted, photographed, its serial written in the book. The Wall is the town's shadow of the truth; it has never shown a brick that was not real.</p>
+    </div>
+
+    <p class="panel-body">At 47 bricks — or the coin's first birthday — the Wall's fate is voted by the Bricklayers: burial at Provadia, or donation to the Varna Regional Museum. It can never be sold. It is never backing, and never redeemable.</p>
+
+    <div class="sub-block">
+      <h3 class="sub-block-title">The Night Brick</h3>
+      <p class="panel-body">Every night at 21:00 UTC the town posts the counter and one true fact, and the Bricklayers answer: 🧱</p>
+      <p class="night-brick-countdown">next Night Brick in — <span id="nightBrickCountdown"></span></p>
+    </div>
+
+    <div class="bell-line">
+      <p>The town bell tolls only when the ledger rings it — once per brick laid. The bell has never rung.</p>
+    </div>
+  </div>
+</section><section class="town-panel" data-station="registry" id="station-registry" aria-label="The Book of Bricklayers">
+  <div class="panel-inner">
+    <p class="panel-eyebrow">The Book of Bricklayers</p>
+    <h2 class="panel-title">The Book of Bricklayers</h2>
+    <p class="registry-empty">No name is written yet.</p>
+    <p class="panel-body">The first name enters this book when the first brick is laid in the Wall — with its receipt beside it. Names and brick numbers only. Never holdings, never value. The book grows only when the Wall does.</p>
+    <div class="registry-treasure">
+      <p>My brick is in the Wall — that sentence is the whole of the treasure.</p>
+    </div>
+  </div>
+</section></div>
+  <div class="stack" data-stack="record"><section class="rec-panel" id="station-market" data-station="market">
+  <header class="rec-head">
+    <p class="rec-eyebrow">Station · Market</p>
+    <h2 class="rec-title">The Market Face</h2>
+    <p class="rec-lede">The coin trades where the crowd trades it. This face shows only what its source reports, at the moment it reports it — nothing drawn in by hand.</p>
+  </header>
+
+  <div class="rec-card">
+    <div data-price-grid>
+      <p class="rec-note">reaching for its source…</p>
+    </div>
+    <p class="rec-source" data-price-source>Source: Dexscreener · reaching for its source…</p>
+    <p class="rec-note">Figures refresh every 60 seconds. If the source cannot be reached, the last receipted figures stay up, labelled with their time.</p>
+    <div class="rec-links">
+      <a href="https://pump.fun/coin/9UE6NStA9pRZ5xagrK1FNy3vybmQVL2VaKB7BNpvpump" target="_blank" rel="noopener">The coin on pump.fun</a>
+      <a href="https://dexscreener.com/solana/2fvtfwcco71j8xepws7yrez3569u2gxu4fyhe2h8oxdy" target="_blank" rel="noopener">The pair on Dexscreener</a>
+    </div>
+    <div class="rec-row"><span class="rec-k">Contract</span><span class="rec-v rec-mono">9UE6NStA9pRZ5xagrK1FNy3vybmQVL2VaKB7BNpvpump</span></div>
+    <div class="rec-row"><span class="rec-k">Supply</span><span class="rec-v">1,000,000,000 · fixed</span></div>
+    <div class="rec-row"><span class="rec-k">Launch</span><span class="rec-v">Fair launch on pump.fun — no presale, no team allocation</span></div>
+  </div>
+
+  <blockquote class="rec-honesty">PROVADIA is a place, not an investment. Holding it names you a Bricklayer in the town registry and gives you a vote on the Wall’s fate — and nothing else: no redemption, no yield, no rights, no expected return.</blockquote>
+</section><section class="rec-panel" id="station-record" data-station="record">
+  <header class="rec-head">
+    <p class="rec-eyebrow">Station · Record</p>
+    <h2 class="rec-title">The Day-Book</h2>
+    <p class="rec-lede">The town's public record. Every entry is chained to the one before it by its hash — change a single letter anywhere and the chain breaks, in the open. Your browser recomputes the whole chain below, on your own machine. No custom on-chain program: the record verifies itself.</p>
+  </header>
+
+  <div class="rec-card">
+    <p class="rec-verdict" data-verify-verdict data-state="working">Recomputing every entry in your browser…</p>
+    <ol class="rec-list" data-daybook-list></ol>
+  </div>
+
+  <div class="rec-card">
+    <h3 class="rec-subtitle">The Daily Anchor</h3>
+    <div class="rec-row"><span class="rec-k">Today's root</span><span class="rec-v rec-mono" data-anchor-root>—</span></div>
+    <p class="rec-note">The root is the SHA-256 of the last entry's hash — one fingerprint for the whole book. Written to Solana as a Memo, it would read exactly:</p>
+    <code class="rec-payload" data-anchor-payload>PROVADIA DAYBOOK ROOT · 2026-11-20 · —</code>
+    <p class="rec-note"><strong>Daily anchor:</strong> the root is computed and ready. The anchor transaction is signed by the founder's hand only — awaiting founder signature.</p>
+    <h4 class="rec-subtitle rec-subtitle-sm">Past anchors</h4>
+    <p class="rec-note">No anchor has been written yet.</p>
+  </div>
+</section><section class="rec-panel" id="station-fees" data-station="fees">
+  <header class="rec-head">
+    <p class="rec-eyebrow">Station · Fees</p>
+    <h2 class="rec-title">The Fee Card</h2>
+    <p class="rec-lede">What the coin pays, and to whom — verified against pump.fun's own published fee documentation (fees page, last updated 16 November 2026). Rates are pump.fun's schedule and can change on their word; the split below is the town's covenant and does not change.</p>
+  </header>
+
+  <div class="rec-card">
+    <div class="rec-row"><span class="rec-k">On the bonding curve</span><span class="rec-v">Creator fee 0.300% of every trade, paid in SOL</span></div>
+    <div class="rec-row"><span class="rec-k">After graduation</span><span class="rec-v">Creator fees continue on the canonical PumpSwap pool, tiered by market cap — 0.300% in the lowest band, peaking at 0.950%, stepping down to 0.050% at the largest caps. Only the canonical pool pays a creator fee; other pools pay 0%.</span></div>
+    <div class="rec-row"><span class="rec-k">Liquidity at migration</span><span class="rec-v">The bonding curve's liquidity migrates to PumpSwap and the LP tokens are burnt — not locked, burnt. Nobody can withdraw the migrated liquidity.</span></div>
+    <div class="rec-row"><span class="rec-k">The split</span><span class="rec-v">Creator fees split 80 / 20 — eighty percent is the founder's income, his pay for building and running the project, disclosed in the open. Twenty percent goes to the Golden Wall, off the top, forever.</span></div>
+    <p class="rec-note">The founder's only income from this project is the disclosed creator fees. Nothing else is skimmed, and no return is promised to anybody.</p>
+  </div>
+</section><section class="rec-panel" id="station-charter" data-station="charter">
+  <header class="rec-head">
+    <p class="rec-eyebrow">Station · Charter</p>
+    <h2 class="rec-title">The Charter</h2>
+    <p class="rec-lede">The law of the Golden Wall, published as record. It rides in every launch post, word for word.</p>
+  </header>
+
+  <div class="rec-card">
+    <blockquote class="rec-charter">20% of creator fees buys physical 1g gold bars stored in a named third-party bullion vault. Each brick: receipt, photo, serial posted to public counter /47. The wall belongs to no one. It cannot be sold. It will be buried at Provadia or donated to a museum, by Bricklayer vote. Nothing else can happen to it. Never backing, never redeemable.</blockquote>
+
+    <h3 class="rec-subtitle">The covenant, in brief</h3>
+    <div class="rec-row"><span class="rec-k">The bricks</span><span class="rec-v">Serial-numbered 1g physical gold bars, bought from a named dealer the moment the accumulated 20% share covers 1g spot plus premium, shipping and vault costs.</span></div>
+    <div class="rec-row"><span class="rec-k">Custody</span><span class="rec-v">Allocated storage at a named, licensed third-party bullion vault. The founder never physically holds the bars.</span></div>
+    <div class="rec-row"><span class="rec-k">The one withdrawal</span><span class="rec-v">ONE withdrawal is permitted, ever — the end ceremony — announced 7 days ahead, with dealer confirmation of dispatch.</span></div>
+    <div class="rec-row"><span class="rec-k">Proof</span><span class="rec-v">Per brick: receipt, photo and serial posted publicly to the counter. The counter stands at 0 / 47.</span></div>
+    <div class="rec-row"><span class="rec-k">The end</span><span class="rec-v">At 47 bricks or the coin's first birthday, whichever comes first. The Bricklayer vote chooses only between burial at Provadia or donation to the Varna Regional Museum. The gold is never sold, never backing, never redeemable.</span></div>
+
+    <h3 class="rec-subtitle">The founder statutes, in brief</h3>
+    <div class="rec-row"><span class="rec-k">Giveback</span><span class="rec-v">No airdrops of value to holders — announced or proportional — ever. The project's giving is structural: the Wall, the town, and the public record.</span></div>
+    <div class="rec-row"><span class="rec-k">Surprise Honors</span><span class="rec-v">Rare, unannounced, for deeds done for the town — never for holdings, never promised, never marketed. Standard form: a brick laid into the Wall in the citizen's honor, paid from the founder's own share, the name and the deed recorded in the Day-Book.</span></div>
+    <div class="rec-row"><span class="rec-k">Reinvestment</span><span class="rec-v">The site and the contract earn nothing for anybody. The founder's only income is the disclosed creator fees, split 80 / 20 as the Fee Card states. No trading for anybody. No promises sold to anybody.</span></div>
+  </div>
+</section><section class="town-panel" data-station="road" id="station-road" aria-label="The Road">
+  <div class="panel-inner">
+    <p class="panel-eyebrow">The Road</p>
+    <h2 class="panel-title">The Road</h2>
+    <p class="panel-body">A roadmap here is not a promise list. It is a road: paved exactly as far as we have travelled, and not one inch further.</p>
+
+    <ol class="road-list">
+      <li class="road-step road-step--outline">
+        <span class="road-step-num" aria-hidden="true">1</span>
+        <h3 class="road-step-title">The Foundation</h3>
+        <p class="road-step-desc">Brick #1, bought with the founder's own money and receipted in the open · the Charter · the Day-Book opens</p>
+      </li>
+      <li class="road-step road-step--ghost">
+        <span class="road-step-num" aria-hidden="true">2</span>
+        <h3 class="road-step-title">The Promise Machine</h3>
+        <p class="road-step-desc">the site grades its own promises, in public, forever</p>
+      </li>
+      <li class="road-step road-step--ghost">
+        <span class="road-step-num" aria-hidden="true">3</span>
+        <h3 class="road-step-title">The Liveness Layer</h3>
+        <p class="road-step-desc">the town reports its own heartbeat, silence included</p>
+      </li>
+      <li class="road-step road-step--ghost">
+        <span class="road-step-num" aria-hidden="true">4</span>
+        <h3 class="road-step-title">The Signed Captain</h3>
+        <p class="road-step-desc">the town's officer, auditable</p>
+      </li>
+      <li class="road-step road-step--ghost">
+        <span class="road-step-num" aria-hidden="true">5</span>
+        <h3 class="road-step-title">The Town Build-Out</h3>
+        <p class="road-step-desc">streets rise as the Wall rises</p>
+      </li>
+      <li class="road-step road-step--ghost">
+        <span class="road-step-num" aria-hidden="true">6</span>
+        <h3 class="road-step-title">The Brick Lock</h3>
+        <p class="road-step-desc">the Wall's custody, locked in code</p>
+      </li>
+      <li class="road-step road-step--ghost">
+        <span class="road-step-num" aria-hidden="true">7</span>
+        <h3 class="road-step-title">The Fee Card</h3>
+        <p class="road-step-desc">every fee, receipted</p>
+      </li>
+      <li class="road-step road-step--ghost">
+        <span class="road-step-num" aria-hidden="true">8</span>
+        <h3 class="road-step-title">The Covenant Kit</h3>
+        <p class="road-step-desc">the covenant, whole, for anyone to check</p>
+      </li>
+    </ol>
+
+    <p class="road-footnote">No dates are promised on this road, beyond the Tuesdays of the Seven Secrets and the coin's first birthday.</p>
+  </div>
+</section></div>
+  <div class="stack" data-stack="door"><section class="town-panel" data-station="story" id="station-story" aria-label="The True Story">
+  <div class="panel-inner">
+    <p class="panel-eyebrow">The True Story</p>
+    <h2 class="panel-title">The True Story</h2>
+    <h3 class="panel-subtitle">What the ground says</h3>
+
+    <div class="fact-list">
+      <div class="fact-block">
+        <p><span class="fact-lead">Found by accident —</span> In October 1972 an excavator operator, Raycho Marinov, struck gold in Varna's industrial zone and carried a shoebox of it to the museum. The cemetery was dug from 1972 to 1991.</p>
+      </div>
+      <div class="fact-block">
+        <p><span class="fact-lead">The dating —</span> Radiocarbon puts the Varna cemetery in use about 4560–4450 BC — some 6,500 years ago. Provadia-Solnitsata made salt from about 5500 BC; its fortified age is 4700–4200 BC.</p>
+      </div>
+      <div class="fact-block">
+        <p><span class="fact-lead">The gold —</span> More than 3,000 objects, over 6 kg, in 28 kinds: sceptres, diadems, bracelets, beads by the thousand, rings and ring-idols, gold cattle, gold-painted pottery. And copper, flint, carnelian, and shell from the Mediterranean.</p>
+      </div>
+      <div class="fact-block">
+        <p><span class="fact-lead">The chief —</span> Grave 43 held a man of 40–50 with over 990 gold objects, 1.5 kg in all, and a sceptre — a stone axe on a gold-sheathed shaft. The museum calls him most likely a chief and priest. No name survives; his people had no writing.</p>
+      </div>
+      <div class="fact-block">
+        <p><span class="fact-lead">The fortress —</span> The salt town stood behind stone walls up to 3 metres thick, with bastions and a gate — raised, the ground shows, over salt made in tons.</p>
+      </div>
+    </div>
+
+    <div class="interpretation-block" role="note" aria-label="Interpretation — not settled fact">
+      <p class="interpretation-label">Interpretation — Not Settled Fact</p>
+      <p>Professor Vasil Nikolov, the salt town's excavator since 2005, holds that salt was money — that the salt brick was currency and Provadia Europe's first mint, and that salt wealth explains Varna's gold. He admits there is no direct evidence for how the trade worked; other scholars call 'Europe's oldest town' hyperbole. In this town we tell it as what it is: one professor's reading of the ground.</p>
+    </div>
+  </div>
+</section><section class="town-panel" data-station="door" id="station-door" aria-label="The Support Desk">
+  <div class="panel-inner">
+    <p class="panel-eyebrow">The Support Desk</p>
+    <h2 class="panel-title">The Support Desk</h2>
+    <p class="panel-body">The only official doors of this town:</p>
+
+    <ul class="door-list">
+      <li class="door-item">
+        <span class="door-name">Email</span>
+        <span class="door-detail"><a href="mailto:support@provadiacoin.com">support@provadiacoin.com</a></span>
+        <span class="door-status">Live</span>
+      </li>
+      <li class="door-item">
+        <span class="door-name">X</span>
+        <span class="door-detail"><a href="https://x.com/ProvadiaCoin" target="_blank" rel="noopener">@ProvadiaCoin</a></span>
+        <span class="door-status">Live</span>
+      </li>
+      <li class="door-item">
+        <span class="door-name">Telegram</span>
+        <span class="door-detail">the town channel</span>
+        <span class="door-status door-status--pending">Opens with Brick #1</span>
+      </li>
+      <li class="door-item">
+        <span class="door-name">Discord</span>
+        <span class="door-detail">the town's hall</span>
+        <span class="door-status door-status--pending">Opens at 100 Bricklayers</span>
+      </li>
+    </ul>
+
+    <p class="armor-line">We never DM first. If a door is not listed here, it is not ours.</p>
+    <p class="panel-body" style="margin-top:1rem">The desk is watched around the clock, every day — a citizen's message is never left unanswered.</p>
+
+    <div class="honesty-block">
+      <p>PROVADIA is a place, not an investment. Holding it names you a Bricklayer in the town registry and gives you a vote on the Wall's fate — and nothing else: no redemption, no yield, no rights, no expected return.</p>
+      <p class="footer-contract">9UE6NStA9pRZ5xagrK1FNy3vybmQVL2VaKB7BNpvpump</p>
+      <p class="sign-off">Salt pays.</p>
+    </div>
+
+    <div class="secrets-block">
+      <h3 class="sub-block-title">The Seven Secrets — Commitments</h3>
+      <p class="secrets-intro">Every secret was committed here before it was told. Each hash is the SHA-256 of a salt plus that secret's final text. When a secret is revealed, its salt is published with it — so anyone can recompute the hash and check it against its line.</p>
+      <ul class="secrets-list">
+        <li><span class="secret-name">Secret 1</span> — SHA-256: bd87e81783b985c67c058bbc03f040a7e46ee47b692ebbe98e8d56b42408aa5a</li>
+        <li><span class="secret-name">Secret 2</span> — SHA-256: 4c708c9c9fd0235afe4bab722f0cbdc9399ef37e740014fcbbb38611e51b4406</li>
+        <li><span class="secret-name">Secret 4</span> — SHA-256: 7323eed62295b991d55dca3cf29b58e7cb86db59d18b63e46010a175457ec6f9</li>
+        <li><span class="secret-name">Secret 3</span> — SHA-256: 08e5d41ffae7ca942b757971f5a85f6076f4c3d3c1db054ae194757fd49755ec</li>
+        <li><span class="secret-name">Secret 5</span> — SHA-256: f81757e0fc7d275fe033169782a44e1dadccdac1d8b958007ef209e82bc23edf</li>
+        <li><span class="secret-name">Secret 6</span> — SHA-256: b4812005651022572b55932fd46ba4b06c73462d003819f9c7847875d8d86053</li>
+        <li><span class="secret-name">Secret 7</span> — SHA-256: 4058b2e9586e38df6465b2f91ff4f9820ac9e81d874411c6687aa31274e41b7b</li>
+      </ul>
+    </div>
+  </div>
+</section></div>
+</main>
+
+<script type="module">
+import * as THREE from './lib/three.module.min.js';
+import { createWorld } from './engines/world/engine.js';
+import { createCoin } from './engines/coin/engine.js';
+import './engines/captain/captain.js';
+import './sections/record/record.js';
+
+const errBox = document.getElementById('err');
+function showErr(msg){ errBox.textContent = 'Error: ' + msg; errBox.style.display = 'block'; }
+window.addEventListener('error', (e) => showErr(e.message || e.type));
+
+// ---- renderer / scene / camera (house contract) ----
+const stage = document.getElementById('stage');
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+stage.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x141210);
+scene.fog = new THREE.FogExp2(0x141210, 0.02);
+
+const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 300);
+camera.position.set(0, 10, 48);
+
+// ---- the world (NEXUS body · Hex Hive · the Streets · Gate · Wall) ----
+const world = createWorld(scene);
+
+// ---- the coin: the market-published face + the Secret Side ----
+const coin = createCoin({
+  frontArtworkUrl: './engines/coin/front-published.jpg',
+  pTextureUrl: './engines/coin/marks/fortress-p.png',
+  anisotropy: Math.min(8, renderer.capabilities.getMaxAnisotropy())
+});
+coin.group.position.set(0, 2.35, 0);
+scene.add(coin.group);
+
+// ---- ?shot=<0..1> freezes the journey (verification) ----
+const params = new URLSearchParams(window.location.search);
+const shotRaw = params.get('shot');
+const shot = shotRaw === null ? null : parseFloat(shotRaw);
+const THRESHOLDS = [0, .18, .36, .52, .68, .84, 1];
+function stationForProgress(p){
+  let idx = 0;
+  for (let i = 0; i < THRESHOLDS.length; i++) if (p >= THRESHOLDS[i]) idx = i;
+  return world.stations[Math.min(idx, world.stations.length - 1)];
+}
+if (shot !== null && !isNaN(shot)) world.setShotMode(shot);
+
+// ---- scroll journey ----
+function readScroll(){
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+  if (shot === null) world.setJourneyProgress(p);
+}
+window.addEventListener('scroll', readScroll, { passive: true });
+readScroll();
+
+// ---- station panels ----
+const LABELS = {
+  arrival: 'Arrival — the Overlook',
+  gate: 'The Gate',
+  captain: "The Captain's Door",
+  square: 'Coin Square',
+  wall: 'The Golden Wall',
+  record: 'The Record Hall',
+  door: 'The Door — Story & Support'
+};
+const captionName = document.getElementById('captionName');
+const finePointer = window.matchMedia('(pointer:fine)').matches;
+function syncCoinInteractive(name){
+  try { coin.api.setInteractive(renderer.domElement, name === 'square' && finePointer); } catch(e) {}
+}
+function showStation(name){
+  document.querySelectorAll('.stack').forEach((s) => s.classList.toggle('active', s.dataset.stack === name));
+  captionName.textContent = LABELS[name] || name;
+  syncCoinInteractive(name);
+}
+let flightDone = shot !== null;
+world.onStation((name) => { if (flightDone) showStation(name); else captionName.textContent = LABELS[name] || name; });
+if (shot !== null && !isNaN(shot)) showStation(stationForProgress(shot));
+else setTimeout(() => { flightDone = true; showStation(world.getStation()); }, 7800);
+
+// ---- coin controls ----
+let tiltDeg = 0;
+const coinState = document.getElementById('coinState');
+document.querySelectorAll('[data-coin]').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const act = btn.dataset.coin;
+    try {
+      if (act === 'left') { tiltDeg = Math.max(-56, tiltDeg - 14); coin.api.setReverseTilt(tiltDeg); }
+      if (act === 'right') { tiltDeg = Math.min(56, tiltDeg + 14); coin.api.setReverseTilt(tiltDeg); }
+      if (act === 'flip') { coin.api.flip(); }
+      if (act === 'home') { tiltDeg = 0; coin.api.homePose(); }
+    } catch(e) {}
+  });
+});
+setInterval(() => { try { coinState.textContent = coin.api.getState().caption; } catch(e) {} }, 500);
+
+// ---- copy buttons (contract address) ----
+document.querySelectorAll('[data-copy-target]').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    const target = document.getElementById(btn.dataset.copyTarget);
+    if (!target) return;
+    const old = btn.textContent;
+    try { await navigator.clipboard.writeText(target.textContent.trim()); btn.textContent = 'Copied'; }
+    catch(e) { btn.textContent = 'Select & copy'; }
+    setTimeout(() => { btn.textContent = old; }, 1600);
+  });
+});
+
+// ---- the Night Brick countdown (next 21:00 UTC) ----
+function tickClock(){
+  const now = new Date();
+  const next = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 21, 0, 0));
+  if (next <= now) next.setUTCDate(next.getUTCDate() + 1);
+  let s = Math.floor((next - now) / 1000);
+  const hh = String(Math.floor(s / 3600)).padStart(2, '0');
+  const mm = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+  const ss = String(s % 60).padStart(2, '0');
+  document.querySelectorAll('#nightBrickCountdown').forEach((el) => { el.textContent = hh + ':' + mm + ':' + ss; });
+}
+tickClock();
+setInterval(tickClock, 1000);
+
+// ---- resize + main loop ----
+window.addEventListener('resize', () => {
+  const w = window.innerWidth, h = window.innerHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(w, h);
+});
+const clockT = new THREE.Clock();
+function tick(){
+  requestAnimationFrame(tick);
+  const dt = Math.min(clockT.getDelta(), 0.05);
+  const t = clockT.elapsedTime;
+  world.update(dt, t);
+  world.applyCamera(camera, dt);
+  coin.api.update(dt, t);
+  renderer.render(scene, camera);
+}
+tick();
+requestAnimationFrame(() => requestAnimationFrame(() => {
+  document.getElementById('fade').classList.add('gone');
+}));
+</script>
+</body>
+</html>
