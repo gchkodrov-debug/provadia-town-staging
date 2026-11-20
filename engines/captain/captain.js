@@ -38,12 +38,26 @@
 import * as THREE from '../../lib/three.module.min.js';
 
 /* ------------------------------------------------------------------ */
+/* THE NAME IN THE WORLD — SOLNIK (proposed by the captain; founder's  */
+/* ear pending, George 2026-11-20 13:00 CT). ONE constant: rename here */
+/* and the whole seat follows. The solniks were the salt-makers of     */
+/* Provadia\u2013Solnitsata \u2014 the town's founding craft, who boiled the    */
+/* brine and baked salt into bricks. He is the last of them, keeping   */
+/* the works, the Wall, and the record. The mascot SOL is the silent   */
+/* brick and never speaks \u2014 Solnik is the voice.                     */
+/* ------------------------------------------------------------------ */
+
+const CAPTAIN_NAME = 'SOLNIK';
+const CAPTAIN_DISPLAY = 'Solnik';
+const CAPTAIN_ROLE = 'Keeper of the Wall';
+
+/* ------------------------------------------------------------------ */
 /* The bank — the only words the Captain may speak as his own.         */
 /* ------------------------------------------------------------------ */
 
 export const GREETING =
   'Hail, traveller, and welcome to Provadia — a town that was old when Rome was a pasture. ' +
-  'I am the Captain of this place, keeper of its Wall and its book. ' +
+  'I am ' + CAPTAIN_DISPLAY + ' \u2014 last of the solniks, the salt-makers who founded this town \u2014 keeper of its Wall and its book. ' +
   'Ask me of the gold, of the salt, of the graves by the sea — for what I tell thee, I can show thee. ' +
   'One claim, one Witness, or it never happened.';
 
@@ -53,9 +67,9 @@ export const HONESTY_SENTENCE =
   'no expected return.';
 
 export const OFFLINE_STATE =
-  'The Captain\u2019s living voice is being wired to this seat. Until it speaks, his tales above are true, and told.';
+  CAPTAIN_DISPLAY + '\u2019s living voice is being wired to this seat. Until it speaks, his tales above are true, and told.';
 
-export const RECEIPT_LINE = 'The Captain speaks only what the record can witness.';
+export const RECEIPT_LINE = CAPTAIN_DISPLAY + ' speaks only what the record can witness.';
 
 export const TALES = [
   {
@@ -277,7 +291,7 @@ function createFace(canvas, maskUrl) {
     const img = document.createElement('img');
     img.className = 'cap-face-img';
     img.src = maskUrl;
-    img.alt = 'The Captain — clay mask of the age, with gold plates for eyes and mouth';
+    img.alt = CAPTAIN_DISPLAY + ' — clay mask of the age, with gold plates for eyes and mouth';
     canvas.replaceWith(img);
   }
 
@@ -473,7 +487,7 @@ function wireSeat(refs, apiBase) {
     live = false;
     input.disabled = true;
     send.disabled = true;
-    input.placeholder = 'The Captain\u2019s voice is not yet wired to this seat.';
+    input.placeholder = CAPTAIN_DISPLAY + '\u2019s voice is not yet wired to this seat.';
     stateLine.textContent = OFFLINE_STATE;
   }
 
@@ -481,9 +495,9 @@ function wireSeat(refs, apiBase) {
     live = true;
     input.disabled = false;
     send.disabled = false;
-    input.placeholder = 'Ask the Captain\u2026';
+    input.placeholder = 'Ask ' + CAPTAIN_DISPLAY + '\u2026';
     stateLine.textContent =
-      'The Captain is seated and listening. Ask — he answers only what the record can witness.';
+      CAPTAIN_DISPLAY + ' is seated and listening. Ask \u2014 he answers only what the record can witness.';
   }
 
   function addMessage(kind, who, text) {
@@ -516,7 +530,7 @@ function wireSeat(refs, apiBase) {
       if (!res.ok) throw new Error('chat ' + res.status);
       const data = await res.json();
       if (!data || typeof data.reply !== 'string') throw new Error('chat shape');
-      addMessage('cap', 'THE CAPTAIN', data.reply);
+      addMessage('cap', CAPTAIN_NAME, data.reply);
       // The weather turns with his temper (George, 2026-11-20 12:59 CT):
       // the host names the mode; the seat makes it FELT — face cools,
       // frame hardens to iron, the weather line speaks. Host mode restores.
@@ -531,7 +545,7 @@ function wireSeat(refs, apiBase) {
       }
     } catch (err) {
       addMessage('note', null,
-        'The Captain\u2019s voice faltered — the line to his seat is down. His tales above remain true, and told.');
+        CAPTAIN_DISPLAY + '\u2019s voice faltered \u2014 the line to his seat is down. His tales above remain true, and told.');
     } finally {
       busy = false;
       if (live) { input.disabled = false; send.disabled = false; input.focus(); }
@@ -544,7 +558,7 @@ function wireSeat(refs, apiBase) {
   }
 
   // Exactly one probe, 2.5s timeout, no retries.
-  stateLine.textContent = 'Waking the Captain\u2026';
+  stateLine.textContent = 'Waking ' + CAPTAIN_DISPLAY + '\u2026';
   const ctl = new AbortController();
   const timer = setTimeout(() => ctl.abort(), 2500);
   fetch(apiBase + '/health', { method: 'GET', signal: ctl.signal })
@@ -565,7 +579,7 @@ export function mountCaptain(root, options = {}) {
   const maskUrl = options.maskUrl || new URL('./marks/mask.webp', import.meta.url).href;
 
   const chamber = el('section', 'cap-chamber');
-  chamber.setAttribute('aria-label', 'The Captain of Provadia');
+  chamber.setAttribute('aria-label', CAPTAIN_DISPLAY + ' of Provadia');
 
   /* --- Top: face left, greeting + honesty right --- */
   const top = el('div', 'cap-top');
@@ -578,17 +592,17 @@ export function mountCaptain(root, options = {}) {
   canvas.height = 540;
   canvas.setAttribute('role', 'img');
   canvas.setAttribute('aria-label',
-    'The Captain\u2019s face — a golden mask of beads and dust, after the clay masks of the age');
+    CAPTAIN_DISPLAY + '\u2019s face \u2014 a golden mask of beads and dust, after the clay masks of the age');
   frame.appendChild(canvas);
   faceWrap.appendChild(frame);
-  faceWrap.appendChild(el('p', 'cap-face-name', 'THE CAPTAIN'));
-  faceWrap.appendChild(el('p', 'cap-face-role', 'Keeper of the Wall and of the Book'));
+  faceWrap.appendChild(el('p', 'cap-face-name', CAPTAIN_NAME));
+  faceWrap.appendChild(el('p', 'cap-face-role', CAPTAIN_ROLE));
   faceWrap.appendChild(el('p', 'cap-weather', 'THE GATE IS WARM'));
   top.appendChild(faceWrap);
 
   const intro = el('div', 'cap-intro');
   intro.appendChild(el('p', 'cap-eyebrow', 'PROVADIA · THE FRONT DOOR'));
-  intro.appendChild(el('h2', 'cap-title', 'The Captain'));
+  intro.appendChild(el('h2', 'cap-title', CAPTAIN_DISPLAY));
   intro.appendChild(el('p', 'cap-greeting', GREETING));
   intro.appendChild(el('p', 'cap-honesty', HONESTY_SENTENCE));
   top.appendChild(intro);
@@ -602,7 +616,7 @@ export function mountCaptain(root, options = {}) {
 
   const chips = el('div', 'cap-chips');
   chips.setAttribute('role', 'tablist');
-  chips.setAttribute('aria-label', 'The Captain\u2019s tales');
+  chips.setAttribute('aria-label', CAPTAIN_DISPLAY + '\u2019s tales');
   const panel = el('article', 'cap-panel');
   const panelHead = el('div', 'cap-panel-head');
   const panelTitle = el('h4', 'cap-panel-title');
@@ -647,15 +661,15 @@ export function mountCaptain(root, options = {}) {
 
   /* --- The seat --- */
   const seat = el('div', 'cap-seat');
-  seat.appendChild(el('h3', 'cap-seat-h', 'The Captain\u2019s Seat'));
+  seat.appendChild(el('h3', 'cap-seat-h', CAPTAIN_DISPLAY + '\u2019s Seat'));
   const stateLine = el('p', 'cap-state', OFFLINE_STATE);
   stateLine.setAttribute('role', 'status');
   const thread = el('div', 'cap-thread');
   thread.setAttribute('aria-live', 'polite');
-  thread.setAttribute('aria-label', 'Conversation with the Captain');
+  thread.setAttribute('aria-label', 'Conversation with ' + CAPTAIN_DISPLAY);
   const receipt = el('p', 'cap-receipt', RECEIPT_LINE);
   const form = el('form', 'cap-form');
-  const label = el('label', 'cap-sr', 'Ask the Captain');
+  const label = el('label', 'cap-sr', 'Ask ' + CAPTAIN_DISPLAY);
   label.htmlFor = 'cap-input-' + Math.random().toString(36).slice(2, 8);
   const input = document.createElement('input');
   input.className = 'cap-input';
